@@ -82,17 +82,34 @@ class Reviewer(Mentor):
                      
 
 class Comparison_Obj:  ## Сравнение
-    def __init__(self, value,name):
+    def __init__(self, value):
         self.value = value
-        self.name = name
 
-    def Comparison(self,other):
-        if self.value == other.value:
-            return f'{self.name} такой же способный как и {other.name}\n'
-        elif self.value > other.value:
-            return f'{self.name} учится/преподаёт лучше {other.name}\n'
-        elif self.value < other.value:
-            return f'{self.name} учится/преподаёт хуже {other.name}\n'
+    #def Comparison(self,other):  ## операторы сравнения Не магические
+    #    if self.value == other.value:
+    #        return f'{self.name} такой же способный как и {other.name}\n'
+    #    elif self.value > other.value:
+    #        return f'{self.name} учится/преподаёт лучше {other.name}\n'
+    #    elif self.value < other.value:
+    #        return f'{self.name} учится/преподаёт хуже {other.name}\n'
+
+    def __eq__(self, other):  ## добавлены Магические операторы
+        return self.value == other.value
+
+    def __ne__(self, other):
+            return self.value != other.value
+ 
+    def __lt__(self, other):
+            return self.value < other.value
+
+    def __gt__(self, other):
+            return self.value > other.value
+
+    def __le__(self, other):
+            return self.value <= other.value
+
+    def __ge__(self, other):
+            return self.value >= other.value
 
  
 Student_db = [
@@ -133,14 +150,14 @@ Student_db[1].Student_rate_hw(Lecturer_db[1],'IEC 61131-3',3)
 Student_db[1].Student_rate_hw(Lecturer_db[1],'Python',2)
 
 ## Отладочная информация
-#print('Отладочная информация')
-#print(f'student: {Student_db[0].name} {Student_db[0].surname} {Student_db[0].grades}')
-#print(f'student: {Student_db[1].name} {Student_db[1].surname} {Student_db[1].grades}')
-#print(f'student: {Student_db[2].name} {Student_db[2].surname} {Student_db[2].grades}')
-#print(f'lecturer: {Lecturer_db[0].name} {Lecturer_db[0].surname} {Lecturer_db[0].lecturer_grades}')
-#print(f'lecturer: {Lecturer_db[1].name} {Lecturer_db[1].surname} {Lecturer_db[1].lecturer_grades}')
-#print(f'reviewer: {Reviewer_db[0].name} {Reviewer_db[0].surname} {Reviewer_db[0].courses_attached}')
-#print('\n')
+print('Отладочная информация')
+print(f'student: {Student_db[0].name} {Student_db[0].surname} {Student_db[0].grades}')
+print(f'student: {Student_db[1].name} {Student_db[1].surname} {Student_db[1].grades}')
+print(f'student: {Student_db[2].name} {Student_db[2].surname} {Student_db[2].grades}')
+print(f'lecturer: {Lecturer_db[0].name} {Lecturer_db[0].surname} {Lecturer_db[0].lecturer_grades}')
+print(f'lecturer: {Lecturer_db[1].name} {Lecturer_db[1].surname} {Lecturer_db[1].lecturer_grades}')
+print(f'reviewer: {Reviewer_db[0].name} {Reviewer_db[0].surname} {Reviewer_db[0].courses_attached}')
+print('\n')
 ##
 
 for i,j in enumerate(Student_db): print(j)
@@ -148,9 +165,13 @@ for i,j in enumerate(Lecturer_db): print(j)
 for i,j in enumerate(Reviewer_db): print(j)
 
 # Сравнение    
-a = Comparison_Obj(Student_db[0].Mean(),Student_db[0].name)
-b = Comparison_Obj(Student_db[1].Mean(),Student_db[1].name)
-print(a.Comparison(b))
+a = Comparison_Obj(Student_db[0].Mean())
+b = Comparison_Obj(Student_db[1].Mean())
+c = Comparison_Obj(Student_db[0].Mean())
+d = Comparison_Obj(Student_db[1].Mean())
+print(f'{Student_db[0].name}[{Student_db[0].Mean()}] учится/преподаёт лучше чем {Student_db[1].name}[{Student_db[1].Mean()}] = {a>b}')
+print(f'{Lecturer_db[0].name}[{Lecturer_db[0].Mean()}] учится/преподаёт так же как {Lecturer_db[1].name}[{Lecturer_db[1].Mean()}] = {c==d}\n')
+
 
 # Функция для подсчёта средней оценки за домашние задания по всем студентам в рамках конкретного курса
 def all_stdnt_mddl(db = Student_db, key = 'Python'):
